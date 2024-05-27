@@ -7,17 +7,25 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-    public CustomOAuth2UserService(UserRepository userRepository){
+    private final NaverPayAddressService naverPayAddressService;
+    public CustomOAuth2UserService(UserRepository userRepository,NaverPayAddressService naverPayAddressService){
         this.userRepository=userRepository;
+        this.naverPayAddressService=naverPayAddressService;
     }
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println(oAuth2User);
+        String accessToken = userRequest.getAccessToken().getTokenValue();
+
+        String payAddress = naverPayAddressService.getPayAddress(accessToken);
+        System.out.println("oAuth2User = " + oAuth2User);
+        System.out.println("payAddress = " + payAddress);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
