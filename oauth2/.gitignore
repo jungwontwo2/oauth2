@@ -26,7 +26,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 *.yml
-*.properties
+application.properties
 
 ### NetBeans ###
 /nbproject/private/
